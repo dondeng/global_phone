@@ -27,6 +27,11 @@ module GlobalPhone
         :country_code => "1", :national_string => "3125551212"
     end
 
+    test "parsing international number with country code prefix but no plus" do
+      assert_parses "(504) 2221-6592", :with_territory => :hn,
+        :country_code => "504", :national_string => "22216592"
+    end
+
     test "changing the default territory" do
       assert_does_not_parse "(0) 20-7031-3000"
 
@@ -59,6 +64,11 @@ module GlobalPhone
       assert_equal "+13125551212", context.normalize("(312) 555-1212")
       assert_nil context.normalize("(0) 20-7031-3000")
       assert_equal "+442070313000", context.normalize("(0) 20-7031-3000", :gb)
+    end
+
+    test "validateing an invalid number returns nil" do
+      assert !context.validate("+0651816068")
+      assert_nil context.validate("+0651816068")
     end
 
     def assert_parses(string, assertions)
